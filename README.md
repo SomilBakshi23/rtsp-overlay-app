@@ -4,7 +4,7 @@
 
 This project is a web-based application that plays a live video stream using **HLS (HTTP Live Streaming)** and allows users to add **text and image overlays** on top of the video. These overlays can be freely **dragged, resized, updated, and removed** in real time.
 
-The main goal of the project was to simulate how live streaming tools (like OBS or broadcast software) handle on-screen overlays, while keeping the system lightweight and easy to understand.
+The main goal of the project was to simulate how live streaming tools (such as OBS or broadcast software) handle on-screen overlays, while keeping the system lightweight, understandable, and easy to extend.
 
 The application uses **React for the frontend**, **Flask for the backend**, and **MongoDB** for storing overlay data.
 
@@ -13,7 +13,7 @@ The application uses **React for the frontend**, **Flask for the backend**, and 
 ## Features
 
 * 🎬 Live video playback using **HLS**
-* 📝 Add text overlays (example: “LIVE”)
+* 📝 Add text overlays (example: **LIVE**)
 * 🖼️ Add image overlays using an image URL
 * 🖱️ Drag and resize overlays directly on the video
 * ❌ Remove overlays easily
@@ -28,9 +28,9 @@ The application uses **React for the frontend**, **Flask for the backend**, and 
 ### Frontend
 
 * React (Vite)
-* hls.js (for HLS playback)
-* react-rnd (for drag & resize functionality)
-* Tailwind CSS (for styling)
+* hls.js (HLS playback)
+* react-rnd (drag & resize overlays)
+* Tailwind CSS (styling)
 
 ### Backend
 
@@ -47,16 +47,16 @@ The application uses **React for the frontend**, **Flask for the backend**, and 
 ## How the System Works
 
 1. **FFmpeg** converts an RTSP stream into HLS format (`.m3u8` and `.ts` files).
-2. **Flask backend** serves:
+2. The **Flask backend**:
 
-   * HLS video files
-   * CRUD APIs for overlay data
-3. **React frontend**:
+   * Serves HLS video files
+   * Provides CRUD APIs for overlay data
+3. The **React frontend**:
 
    * Plays the HLS stream using `hls.js`
    * Allows users to create, move, resize, and delete overlays
-   * Syncs overlay changes with the backend API
-4. **MongoDB** stores overlay details so they persist after page refresh.
+   * Syncs overlay changes with the backend APIs
+4. **MongoDB** stores overlay data so it persists after page refresh.
 
 ---
 
@@ -69,6 +69,66 @@ The application uses **React for the frontend**, **Flask for the backend**, and 
 | PUT    | `/api/overlays/:id` | Update overlay position/size |
 | DELETE | `/api/overlays/:id` | Remove an overlay            |
 | GET    | `/hls/<filename>`   | Serve HLS video files        |
+
+---
+
+## API Examples
+
+### GET /api/overlays
+
+Fetch all saved overlays.
+
+```json
+[
+  {
+    "_id": "64fa123abc",
+    "type": "text",
+    "content": "LIVE",
+    "x": 40,
+    "y": 40,
+    "width": 120,
+    "height": 40
+  }
+]
+```
+
+---
+
+### POST /api/overlays
+
+Create a new overlay.
+
+```json
+{
+  "type": "text",
+  "content": "LIVE",
+  "x": 40,
+  "y": 40,
+  "width": 120,
+  "height": 40
+}
+```
+
+---
+
+### PUT /api/overlays/:id
+
+Update overlay position or size.
+
+```json
+{
+  "x": 80,
+  "y": 60,
+  "width": 160,
+  "height": 50
+}
+```
+
+---
+
+### DELETE /api/overlays/:id
+
+Delete an overlay by ID.
 
 ---
 
@@ -113,7 +173,19 @@ ffmpeg -rtsp_transport tcp -i <RTSP_STREAM_URL> \
 hls/stream.m3u8
 ```
 
-> FFmpeg must stay running while the app is active.
+> FFmpeg must remain running while the application is active.
+
+---
+
+## Changing the RTSP Stream URL
+
+The RTSP stream source can be changed directly in the FFmpeg command.
+
+To use a different stream:
+
+1. Replace `<RTSP_STREAM_URL>` with any valid RTSP URL.
+2. Restart the FFmpeg process.
+3. Refresh the frontend to view the new livestream.
 
 ---
 
@@ -133,25 +205,24 @@ http://localhost:5173
 
 ---
 
-## How to Use the Application
+## User Guide
 
-1. Open the frontend in the browser.
-2. The live video stream will start playing automatically.
-3. Use the controls to:
-
-   * Add a **text overlay**
-   * Add an **image overlay**
-4. Drag and resize overlays directly on the video.
-5. Click ❌ to remove an overlay.
-6. Refresh the page — overlays will remain saved.
+1. Start the backend server.
+2. Run FFmpeg to generate the HLS stream.
+3. Open the frontend in the browser.
+4. The livestream starts playing automatically.
+5. Use the controls to add text or image overlays.
+6. Drag and resize overlays directly on the video.
+7. Click the ❌ icon to remove overlays.
+8. Refresh the page to confirm overlay persistence.
 
 ---
 
 ## Notes
 
-* The `/api/overlays` endpoint returns **raw JSON**, not a webpage.
+* The `/api/overlays` endpoint returns **raw JSON**, not a visual page.
 * Browser warnings related to `favicon.ico` are harmless and can be ignored.
-* The application is intended for development/demo purposes and uses Flask’s development server.
+* This project uses Flask’s development server and is intended for demo and assignment purposes.
 
 ---
 
@@ -167,5 +238,4 @@ http://localhost:5173
 
 ## Conclusion
 
-This project demonstrates a complete end-to-end implementation of a live video overlay system, combining frontend interactivity with backend persistence. It focuses on clarity, usability, and real-time interaction rather than unnecessary complexity.
-
+This project demonstrates a complete end-to-end implementation of a live video overlay system, combining frontend interactivity with backend persistence. It focuses on practical functionality, clarity, and real-time user interaction.
